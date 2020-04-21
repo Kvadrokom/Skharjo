@@ -44,6 +44,40 @@ int    pres(char op1, char op2)
     return (num1 > num2);
 }
 
+char  *remove_tabs(char *str)
+{
+  char  *tmp;
+  int   count;
+  int   i;
+  int   start;
+
+  start = 0;
+  i = 0;
+  count = 0;
+  while(*str)
+  {
+    if(*str != ' ')
+    {
+      count++;
+    }
+    start++;
+    str++;
+  }
+    str = str - start;
+    tmp =(char*) malloc(sizeof(char)*(count + 1));
+    while(*str)
+    {
+      if(*str != ' ')
+      {
+        tmp[i] = *str;
+        i++;
+      }
+      str++;
+    }
+    tmp[i] = '\0';
+    return (tmp);
+}
+
 char *make_str_from_int(int num)
 {
   char c[40];
@@ -297,6 +331,7 @@ int main(int argc, char **argv)
   list_int = 0;
   if (argc > 1)
   {
+      argv[1] = remove_tabs(argv[1]);
       ft_print_nbr(eval_expr(argv[1], &list_int, &list_op));
   }
   return (0);
