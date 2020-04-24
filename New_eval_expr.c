@@ -44,40 +44,6 @@ int    pres(char op1, char op2)
     return (num1 > num2);
 }
 
-char  *remove_tabs(char *str)
-{
-  char  *tmp;
-  int   count;
-  int   i;
-  int   start;
-
-  start = 0;
-  i = 0;
-  count = 0;
-  while(*str)
-  {
-    if(*str != ' ')
-    {
-      count++;
-    }
-    start++;
-    str++;
-  }
-    str = str - start;
-    tmp =(char*) malloc(sizeof(char)*(count + 1));
-    while(*str)
-    {
-      if(*str != ' ')
-      {
-        tmp[i] = *str;
-        i++;
-      }
-      str++;
-    }
-    tmp[i] = '\0';
-    return (tmp);
-}
-
 char *make_str_from_int(int num)
 {
   char c[40];
@@ -234,9 +200,7 @@ void  do_op(char *op, t_list **list_op, t_list **list_int)
   char *a;
 
   if (op[0] == '(' || !(*list_op))
-  {
     ft_push_back(list_op, op);
-  }
   else if (op[0] == ')')
     do_op_par(list_int, list_op);
   else 
@@ -297,10 +261,7 @@ int   eval_expr(char *c, t_list **list_int, t_list **list_op)
     }
     if (is_digit(*c) && *c != 0)
     {
-      if (*(c - 1) == '-' && *(c-2) == '(')
-        ft_push_back(list_int, c - 1);
-      else
-        ft_push_back(list_int, c);
+      ft_push_back(list_int, c);
       while (is_digit(*c) && *c != 0)
             {
               c++;
@@ -308,16 +269,11 @@ int   eval_expr(char *c, t_list **list_int, t_list **list_op)
     }
     if (is_op(*c) && *c != 0)
     {
-      if((*c == '-' || *c == '+') && *(c - 1) == '(')
-        c++;
-      else
-      {
-          do_op(c, list_op, list_int);
-          c++;
-      }
+      do_op(c, list_op, list_int);
+    }
     if(*c == 0)
       break;
-    }
+    c++;
   }
   return (last_op(list_int, list_op));
 }
@@ -331,8 +287,6 @@ int main(int argc, char **argv)
   list_int = 0;
   if (argc > 1)
   {
-      argv[1] = remove_tabs(argv[1]);
       ft_print_nbr(eval_expr(argv[1], &list_int, &list_op));
   }
-  return (0);
 }
